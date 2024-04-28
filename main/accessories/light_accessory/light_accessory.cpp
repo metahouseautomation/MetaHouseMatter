@@ -2,7 +2,6 @@
 #include "hal/gpio_types.h"
 
 #include "checker.hpp"
-#include "esp_log.h"
 #include "accessories/base_accessory/base_accessory.hpp"
 #include "accessories/light_accessory/light_accessory.hpp"
 
