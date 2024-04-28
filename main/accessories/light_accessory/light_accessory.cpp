@@ -3,8 +3,8 @@
 
 #include "checker.hpp"
 #include "esp_log.h"
-#include "light_accessory.hpp"
 #include "accessories/base_accessory/base_accessory.hpp"
+#include "accessories/light_accessory/light_accessory.hpp"
 
 LightAccessory::LightAccessory(gpio_num_t button_pin, gpio_num_t led_pin)
     : BaseAccessory()

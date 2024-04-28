@@ -1,8 +1,8 @@
-#include "door_lock.hpp"
-#include "bridge_node.hpp"
+#include "endpoints/door_lock/door_lock.hpp"
 #include "checker.hpp"
 #include "esp_log.h"
 #include "app-common/zap-generated/ids/Attributes.h"
+#include "endpoints/bridge_node/bridge_node.hpp"
 
 namespace metahouse::endpoint::door_lock {
 esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_matter::endpoint_t *aggregator)

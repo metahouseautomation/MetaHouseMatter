@@ -7,7 +7,7 @@
 #include <esp_matter_core.h>
 #include <esp_matter_endpoint.h>
 
-#include "light_accessory.hpp"
+#include "accessories/light_accessory/light_accessory.hpp"
 
 // Main namespace for the project
 namespace metahouse {

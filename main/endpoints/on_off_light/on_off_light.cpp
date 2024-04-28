@@ -1,7 +1,7 @@
 #include "on_off_light.hpp"
-#include "bridge_node.hpp"
 #include "checker.hpp"
-#include "light_accessory.hpp"
+#include "accessories/light_accessory/light_accessory.hpp"
+#include "endpoints/bridge_node/bridge_node.hpp"
 
 namespace metahouse::endpoint::on_off_light {
 esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_matter::endpoint_t *aggregator,

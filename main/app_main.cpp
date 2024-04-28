@@ -7,19 +7,19 @@
 #include <esp_matter_identify.h>
 #include <nvs_flash.h>
 
-#include "aggregator.hpp"
 #include "callback_event.hpp"
 #include "checker.hpp"
 #include "root_node.hpp"
+#include "endpoints/aggregator/aggregator.hpp"
 
-// #include "door_lock.hpp"
+// #include "endpoints/door_lock/door_lock.hpp"
 #include "fan.hpp"
 #include "generic_switch.hpp"
 #include "on_off_light.hpp"
 #include "on_off_plugin.hpp"
-#include "window_covering.hpp"
+#include "endpoints/window_covering/window_covering.hpp"
 
-#include "light_accessory.hpp"
+#include "accessories/light_accessory/light_accessory.hpp"
 
 extern "C" void app_main()
 {

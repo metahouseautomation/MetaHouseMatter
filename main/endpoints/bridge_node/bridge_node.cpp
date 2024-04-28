@@ -1,7 +1,7 @@
 #include <esp_err.h>
 
-#include "bridge_node.hpp"
 #include "checker.hpp"
+#include "endpoints/bridge_node/bridge_node.hpp"
 
 namespace metahouse::endpoint::bridge_node {
 

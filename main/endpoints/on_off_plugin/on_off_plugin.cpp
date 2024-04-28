@@ -1,6 +1,6 @@
 #include "on_off_plugin.hpp"
-#include "bridge_node.hpp"
 #include "checker.hpp"
+#include "endpoints/bridge_node/bridge_node.hpp"
 
 namespace metahouse::endpoint::on_off_plugin {
 esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_matter::endpoint_t *aggregator)

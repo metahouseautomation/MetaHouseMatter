@@ -1,4 +1,4 @@
-#include "aggregator.hpp"
+#include "endpoints/aggregator/aggregator.hpp"
 #include "checker.hpp"
 
 namespace metahouse::endpoint::aggregator {
