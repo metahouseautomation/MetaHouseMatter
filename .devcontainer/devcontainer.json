@@ -24,7 +24,8 @@
 				"espressif.esp-idf-extension",
 				"GitHub.copilot",
 				"Wokwi.wokwi-vscode",
-				"llvm-vs-code-extensions.vscode-clangd"
+				"llvm-vs-code-extensions.vscode-clangd",
+				"mhutchie.git-graph"
 			]
 		}
 	},
