@@ -5,6 +5,8 @@ set(srcs
 
 list (APPEND srcs
     "accessories/light_accessory/light_accessory.cpp"
+    "accessories/plugin_accessory/plugin_accessory.cpp"
+    "accessories/switch_accessory/switch_accessory.cpp"
 )
     
 list (APPEND srcs
@@ -24,6 +26,8 @@ set(include_dirs "." "include")
 list(APPEND include_dirs
     "accessories/base_accessory"
     "accessories/light_accessory"
+    "accessories/plugin_accessory"
+    "accessories/switch_accessory"
 )
 
 list(APPEND include_dirs
