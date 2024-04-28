@@ -5,14 +5,15 @@
 
 namespace metahouse::endpoint::bridge_node {
 
-esp_matter::endpoint_t *create_bridged_endpoint(esp_matter::node_t *node, esp_matter::endpoint_t *aggregator)
+esp_matter::endpoint_t *create_bridged_endpoint(esp_matter::node_t *node, esp_matter::endpoint_t *aggregator,
+                                                void *priv_data)
 {
     _CHECK_NULL_RETURN(node, "Node is null", nullptr);
     _CHECK_NULL_RETURN(aggregator, "Aggregator is null", nullptr);
 
     esp_matter::endpoint_t *endpoint = esp_matter::endpoint::create(
         node, esp_matter::endpoint_flags::ENDPOINT_FLAG_BRIDGE | esp_matter::endpoint_flags::ENDPOINT_FLAG_DESTROYABLE,
-        nullptr);
+        priv_data);
     _CHECK_NULL_RETURN(endpoint, "Failed to create the endpoint", nullptr);
 
     esp_err_t err = esp_matter::endpoint::add_device_type(endpoint, DEVICE_TYPE_ID, DEVICE_TYPE_VERSION);

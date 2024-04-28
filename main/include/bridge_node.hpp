@@ -21,7 +21,8 @@ const uint8_t DEVICE_TYPE_VERSION = ESP_MATTER_BRIDGED_NODE_DEVICE_TYPE_VERSION;
  * @return Bridged endpoint
  *
  */
-esp_matter::endpoint_t *create_bridged_endpoint(esp_matter::node_t *node, esp_matter::endpoint_t *aggregator);
+esp_matter::endpoint_t *create_bridged_endpoint(esp_matter::node_t *node, esp_matter::endpoint_t *aggregator,
+                                                void *priv_data = nullptr);
 
 } // namespace bridge_node
 } // namespace endpoint

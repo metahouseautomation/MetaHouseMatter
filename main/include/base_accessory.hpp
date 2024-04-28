@@ -6,8 +6,8 @@
 
 class BaseAccessory {
 public:
-    BaseAccessory();
-    ~BaseAccessory();
+    BaseAccessory() = default;
+    virtual ~BaseAccessory() = default;
     virtual esp_err_t attribute_update(uint16_t endpoint_id, uint32_t cluster_id, uint32_t attribute_id,
                                        esp_matter_attr_val_t *val) = 0;
     virtual esp_err_t identification(uint16_t endpoint_id) = 0;
