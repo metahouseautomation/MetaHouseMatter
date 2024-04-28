@@ -1,8 +1,8 @@
 #include "callback_event.hpp"
-#include "base_accessory.hpp"
 #include "esp_err.h"
 #include "esp_log.h"
 #include "esp_matter_attribute_utils.h"
+#include "accessories/base_accessory/base_accessory.hpp"
 
 static const char *TAG = "app_callback";
 constexpr auto k_timeout_seconds = 300;

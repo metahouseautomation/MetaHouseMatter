@@ -7,7 +7,7 @@
 #include <esp_matter_attribute_utils.h>
 #include <hal/gpio_types.h>
 
-#include "base_accessory.hpp"
+#include "accessories/base_accessory/base_accessory.hpp"
 
 class LightAccessory : public BaseAccessory {
 private:

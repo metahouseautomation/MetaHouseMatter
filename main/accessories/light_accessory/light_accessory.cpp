@@ -1,10 +1,10 @@
 #include <iot_button.h>
 #include "hal/gpio_types.h"
 
-#include "base_accessory.hpp"
 #include "checker.hpp"
 #include "esp_log.h"
 #include "light_accessory.hpp"
+#include "accessories/base_accessory/base_accessory.hpp"
 
 LightAccessory::LightAccessory(gpio_num_t button_pin, gpio_num_t led_pin)
     : BaseAccessory()
