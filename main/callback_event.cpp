@@ -1,4 +1,8 @@
 #include "callback_event.hpp"
+#include "base_accessory.hpp"
+#include "esp_err.h"
+#include "esp_log.h"
+#include "esp_matter_attribute_utils.h"
 
 static const char *TAG = "app_callback";
 constexpr auto k_timeout_seconds = 300;
@@ -110,14 +114,15 @@ esp_err_t metahouse::callback_event::attribute_update(esp_matter::attribute::cal
                                                       uint32_t cluster_id, uint32_t attribute_id,
                                                       esp_matter_attr_val_t *val, void *priv_data)
 {
-    if (type == esp_matter::attribute::callback_type_t::POST_UPDATE) {
-        if (priv_data) {
-            // metahouse::endpoint::PrivateDataDelegate *private_data =
-            // (metahouse::endpoint::PrivateDataDelegate *)priv_data;
-            // private_data->attribute_update(endpoint_id, cluster_id, attribute_id,
-            // val);
+    if (type == esp_matter::attribute::callback_type_t::PRE_UPDATE) {
+        if (priv_data != nullptr) {
+            BaseAccessory *accessory = static_cast<BaseAccessory *>(priv_data);
+            if (accessory != nullptr) {
+                return accessory->attribute_update(endpoint_id, cluster_id, attribute_id, val);
+            }
         }
-    }
 
+        return ESP_OK;
+    }
     return ESP_OK;
 }
