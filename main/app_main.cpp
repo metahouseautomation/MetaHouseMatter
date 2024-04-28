@@ -8,10 +8,10 @@
 #include "aggregator.hpp"
 #include "callback_event.hpp"
 #include "checker.hpp"
-#include "on_off_light.hpp"
 #include "root_node.hpp"
 
-static const char *TAG = "app_main";
+#include "fan.hpp"
+#include "on_off_light.hpp"
 
 extern "C" void app_main()
 {
@@ -33,16 +33,15 @@ extern "C" void app_main()
     _CHECK_NULL_(aggregator, "Failed to create aggregator");
 
     /* Create a Matter on/off light endpoint */
-    metahouse::endpoint::on_off_light::config_t on_off_light_config1;
-    esp_matter::endpoint_t *on_off_light1 =
-        metahouse::endpoint::on_off_light::create(root_node, &on_off_light_config1, aggregator);
-    _CHECK_NULL_(on_off_light1, "Failed to create on/off light");
+    metahouse::endpoint::on_off_light::config_t on_off_light_config;
+    esp_matter::endpoint_t *on_off_light =
+        metahouse::endpoint::on_off_light::create(root_node, &on_off_light_config, aggregator);
+    _CHECK_NULL_(on_off_light, "Failed to create on/off light");
 
-    /* Create a Matter on/off light endpoint */
-    metahouse::endpoint::on_off_light::config_t on_off_light_config2;
-    esp_matter::endpoint_t *on_off_light2 =
-        metahouse::endpoint::on_off_light::create(root_node, &on_off_light_config2, aggregator);
-    _CHECK_NULL_(on_off_light2, "Failed to create on/off light");
+    /* Create a Matter fan endpoint */
+    metahouse::endpoint::fan::config_t fan_config;
+    esp_matter::endpoint_t *fan = metahouse::endpoint::fan::create(root_node, &fan_config, aggregator);
+    _CHECK_NULL_(fan, "Failed to create fan");
 
     /* Start the Matter stack */
     esp_err_t err = esp_matter::start(metahouse::callback_event::event);
