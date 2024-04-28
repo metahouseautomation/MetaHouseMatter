@@ -1,6 +1,8 @@
 #include "door_lock.hpp"
 #include "bridge_node.hpp"
 #include "checker.hpp"
+#include "esp_log.h"
+#include "app-common/zap-generated/ids/Attributes.h"
 
 namespace metahouse::endpoint::door_lock {
 esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_matter::endpoint_t *aggregator)
@@ -39,6 +41,16 @@ esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_m
     esp_matter::cluster_t *door_lock_cluster = esp_matter::cluster::door_lock::create(
         endpoint, &(config->door_lock), esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
     _CHECK_NULL_RETURN(door_lock_cluster, "Failed to create the door lock cluster", nullptr);
+
+    esp_matter::attribute_t *attribute =
+        esp_matter::attribute::get(door_lock_cluster, chip::app::Clusters::DoorLock::Attributes::LockState::Id);
+    esp_matter_attr_val_t val;
+    esp_matter::attribute::get_val(attribute, &val);
+    ESP_LOGE("------------------------------------------------------------", "val: %d", val.val.i);
+    val.val.i = 1;
+    esp_matter::attribute::update(esp_matter::endpoint::get_id(endpoint),
+                                  esp_matter::cluster::get_id(door_lock_cluster),
+                                  esp_matter::attribute::get_id(attribute), &val);
 
     return endpoint;
 }

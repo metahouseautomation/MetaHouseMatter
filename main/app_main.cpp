@@ -60,11 +60,11 @@ extern "C" void app_main()
         metahouse::endpoint::generic_switch::create(root_node, &generic_switch_config, aggregator);
     _CHECK_NULL_(generic_switch, "Failed to create generic switch");
 
-    /* Create a Matter door lock endpoint */
-    metahouse::endpoint::door_lock::config_t door_lock_config;
-    esp_matter::endpoint_t *door_lock =
-        metahouse::endpoint::door_lock::create(root_node, &door_lock_config, aggregator);
-    _CHECK_NULL_(door_lock, "Failed to create door lock");
+    // /* Create a Matter door lock endpoint */
+    // metahouse::endpoint::door_lock::config_t door_lock_config;
+    // esp_matter::endpoint_t *door_lock =
+    //     metahouse::endpoint::door_lock::create(root_node, &door_lock_config, aggregator);
+    // _CHECK_NULL_(door_lock, "Failed to create door lock");
 
     /* Start the Matter stack */
     esp_err_t err = esp_matter::start(metahouse::callback_event::event);
