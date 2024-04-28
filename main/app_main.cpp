@@ -12,6 +12,7 @@
 
 #include "fan.hpp"
 #include "on_off_light.hpp"
+#include "on_off_plugin.hpp"
 
 extern "C" void app_main()
 {
@@ -42,6 +43,12 @@ extern "C" void app_main()
     metahouse::endpoint::fan::config_t fan_config;
     esp_matter::endpoint_t *fan = metahouse::endpoint::fan::create(root_node, &fan_config, aggregator);
     _CHECK_NULL_(fan, "Failed to create fan");
+
+    /* Create a Matter on/off plugin endpoint */
+    metahouse::endpoint::on_off_plugin::config_t on_off_plugin_config;
+    esp_matter::endpoint_t *on_off_plugin =
+        metahouse::endpoint::on_off_plugin::create(root_node, &on_off_plugin_config, aggregator);
+    _CHECK_NULL_(on_off_plugin, "Failed to create on/off plugin");
 
     /* Start the Matter stack */
     esp_err_t err = esp_matter::start(metahouse::callback_event::event);
