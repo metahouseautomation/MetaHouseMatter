@@ -7,6 +7,8 @@
 #include <esp_matter_core.h>
 #include <esp_matter_endpoint.h>
 
+#include "accessories/plugin_accessory/plugin_accessory.hpp"
+
 // Main namespace for the project
 namespace metahouse {
 // Namespace for application endpoints
@@ -39,8 +41,8 @@ typedef struct config {
  * @note If the aggregator is provided, the on/off plugin will be created as bridged device on the aggregator
  *
  */
-esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config,
-                               esp_matter::endpoint_t *aggregator = nullptr);
+esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_matter::endpoint_t *aggregator = nullptr,
+                               PluginAccessory *priv_data = nullptr);
 
 } // namespace on_off_plugin
 } // namespace endpoint

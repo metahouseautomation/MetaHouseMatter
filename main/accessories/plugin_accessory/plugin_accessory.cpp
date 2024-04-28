@@ -64,3 +64,8 @@ void PluginAccessory::callback(void *button_handle, void *usr_data)
     PluginAccessory *self = static_cast<PluginAccessory *>(usr_data);
     self->setState(!self->getState());
 }
+
+void PluginAccessory::setEndpointId(uint16_t endpoint_id)
+{
+    m_endpoint_id = endpoint_id;
+}
