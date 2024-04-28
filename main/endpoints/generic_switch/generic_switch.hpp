@@ -7,6 +7,8 @@
 #include <esp_matter_core.h>
 #include <esp_matter_endpoint.h>
 
+#include "accessories/switch_accessory/switch_accessory.hpp"
+
 // Main namespace for the project
 namespace metahouse {
 // Namespace for application endpoints
@@ -31,13 +33,14 @@ typedef struct config {
  * @param node Node to create the generic switch on
  * @param config Configuration for the generic switch
  * @param aggregator Aggregator as parent for the generic switch (optional)
+ * @param priv_data Private data for the generic switch (optional)
  *
  * @return Generic switch
  * @note If the aggregator is provided, the generic switch will be created as bridged device on the aggregator
  *
  */
-esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config,
-                               esp_matter::endpoint_t *aggregator = nullptr);
+esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_matter::endpoint_t *aggregator = nullptr,
+                               SwitchAccessory *priv_data = nullptr);
 
 } // namespace generic_switch
 } // namespace endpoint

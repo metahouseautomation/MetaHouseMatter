@@ -21,6 +21,7 @@
 
 #include "accessories/light_accessory/light_accessory.hpp"
 #include "accessories/plugin_accessory/plugin_accessory.hpp"
+#include "accessories/switch_accessory/switch_accessory.hpp"
 
 extern "C" void app_main()
 {
@@ -41,29 +42,30 @@ extern "C" void app_main()
     esp_matter::endpoint_t *aggregator = metahouse::endpoint::aggregator::create(root_node, &aggregator_config);
     _CHECK_NULL_(aggregator, "Failed to create aggregator");
 
-    /* Create a Matter on/off light endpoint */
-    LightAccessory *lightAccessory = new LightAccessory(GPIO_NUM_5, GPIO_NUM_2);
-    metahouse::endpoint::on_off_light::config_t on_off_light_config;
-    esp_matter::endpoint_t *on_off_light =
-        metahouse::endpoint::on_off_light::create(root_node, &on_off_light_config, aggregator, lightAccessory);
-    _CHECK_NULL_(on_off_light, "Failed to create on/off light");
+    // /* Create a Matter on/off light endpoint */
+    // LightAccessory *lightAccessory = new LightAccessory(GPIO_NUM_5, GPIO_NUM_2);
+    // metahouse::endpoint::on_off_light::config_t on_off_light_config;
+    // esp_matter::endpoint_t *on_off_light =
+    //     metahouse::endpoint::on_off_light::create(root_node, &on_off_light_config, aggregator, lightAccessory);
+    // _CHECK_NULL_(on_off_light, "Failed to create on/off light");
 
-    /* Create a Matter fan endpoint */
-    metahouse::endpoint::fan::config_t fan_config;
-    esp_matter::endpoint_t *fan = metahouse::endpoint::fan::create(root_node, &fan_config, aggregator);
-    _CHECK_NULL_(fan, "Failed to create fan");
+    // /* Create a Matter fan endpoint */
+    // metahouse::endpoint::fan::config_t fan_config;
+    // esp_matter::endpoint_t *fan = metahouse::endpoint::fan::create(root_node, &fan_config, aggregator);
+    // _CHECK_NULL_(fan, "Failed to create fan");
 
-    /* Create a Matter on/off plugin endpoint */
-    PluginAccessory *pluginAccessory = new PluginAccessory(GPIO_NUM_4, GPIO_NUM_16);
-    metahouse::endpoint::on_off_plugin::config_t on_off_plugin_config;
-    esp_matter::endpoint_t *on_off_plugin =
-        metahouse::endpoint::on_off_plugin::create(root_node, &on_off_plugin_config, aggregator, pluginAccessory);
-    _CHECK_NULL_(on_off_plugin, "Failed to create on/off plugin");
+    // /* Create a Matter on/off plugin endpoint */
+    // PluginAccessory *pluginAccessory = new PluginAccessory(GPIO_NUM_4, GPIO_NUM_16);
+    // metahouse::endpoint::on_off_plugin::config_t on_off_plugin_config;
+    // esp_matter::endpoint_t *on_off_plugin =
+    //     metahouse::endpoint::on_off_plugin::create(root_node, &on_off_plugin_config, aggregator, pluginAccessory);
+    // _CHECK_NULL_(on_off_plugin, "Failed to create on/off plugin");
 
     /* Create a Matter generic switch endpoint */
+    SwitchAccessory *switchAccessory = new SwitchAccessory(GPIO_NUM_5);
     metahouse::endpoint::generic_switch::config_t generic_switch_config;
     esp_matter::endpoint_t *generic_switch =
-        metahouse::endpoint::generic_switch::create(root_node, &generic_switch_config, aggregator);
+        metahouse::endpoint::generic_switch::create(root_node, &generic_switch_config, aggregator, switchAccessory);
     _CHECK_NULL_(generic_switch, "Failed to create generic switch");
 
     // /* Create a Matter door lock endpoint */
@@ -72,11 +74,11 @@ extern "C" void app_main()
     //     metahouse::endpoint::door_lock::create(root_node, &door_lock_config, aggregator);
     // _CHECK_NULL_(door_lock, "Failed to create door lock");
 
-    /* Create a Matter window covering endpoint */
-    metahouse::endpoint::window_covering::config_t window_covering_config;
-    esp_matter::endpoint_t *window_covering =
-        metahouse::endpoint::window_covering::create(root_node, &window_covering_config, aggregator);
-    _CHECK_NULL_(window_covering, "Failed to create window covering");
+    // /* Create a Matter window covering endpoint */
+    // metahouse::endpoint::window_covering::config_t window_covering_config;
+    // esp_matter::endpoint_t *window_covering =
+    //     metahouse::endpoint::window_covering::create(root_node, &window_covering_config, aggregator);
+    // _CHECK_NULL_(window_covering, "Failed to create window covering");
 
     /* Start the Matter stack */
     esp_err_t err = esp_matter::start(metahouse::callback_event::event);
