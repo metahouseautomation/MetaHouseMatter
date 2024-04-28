@@ -11,6 +11,7 @@
 #include "root_node.hpp"
 
 #include "fan.hpp"
+#include "generic_switch.hpp"
 #include "on_off_light.hpp"
 #include "on_off_plugin.hpp"
 
@@ -49,6 +50,12 @@ extern "C" void app_main()
     esp_matter::endpoint_t *on_off_plugin =
         metahouse::endpoint::on_off_plugin::create(root_node, &on_off_plugin_config, aggregator);
     _CHECK_NULL_(on_off_plugin, "Failed to create on/off plugin");
+
+    /* Create a Matter generic switch endpoint */
+    metahouse::endpoint::generic_switch::config_t generic_switch_config;
+    esp_matter::endpoint_t *generic_switch =
+        metahouse::endpoint::generic_switch::create(root_node, &generic_switch_config, aggregator);
+    _CHECK_NULL_(generic_switch, "Failed to create generic switch");
 
     /* Start the Matter stack */
     esp_err_t err = esp_matter::start(metahouse::callback_event::event);
