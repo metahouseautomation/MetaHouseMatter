@@ -12,11 +12,12 @@
 #include "checker.hpp"
 #include "root_node.hpp"
 
-#include "door_lock.hpp"
+// #include "door_lock.hpp"
 #include "fan.hpp"
 #include "generic_switch.hpp"
 #include "on_off_light.hpp"
 #include "on_off_plugin.hpp"
+#include "window_covering.hpp"
 
 extern "C" void app_main()
 {
@@ -65,6 +66,12 @@ extern "C" void app_main()
     // esp_matter::endpoint_t *door_lock =
     //     metahouse::endpoint::door_lock::create(root_node, &door_lock_config, aggregator);
     // _CHECK_NULL_(door_lock, "Failed to create door lock");
+
+    /* Create a Matter window covering endpoint */
+    metahouse::endpoint::window_covering::config_t window_covering_config;
+    esp_matter::endpoint_t *window_covering =
+        metahouse::endpoint::window_covering::create(root_node, &window_covering_config, aggregator);
+    _CHECK_NULL_(window_covering, "Failed to create window covering");
 
     /* Start the Matter stack */
     esp_err_t err = esp_matter::start(metahouse::callback_event::event);
