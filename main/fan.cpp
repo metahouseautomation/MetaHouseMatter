@@ -1,8 +1,8 @@
-#include "on_off_light.hpp"
+#include "fan.hpp"
 #include "bridge_node.hpp"
 #include "checker.hpp"
 
-namespace metahouse::endpoint::on_off_light {
+namespace metahouse::endpoint::fan {
 esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_matter::endpoint_t *aggregator)
 {
     _CHECK_NULL_RETURN(node, "Node is null", nullptr);
@@ -44,11 +44,10 @@ esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_m
         endpoint, &(config->scenes), esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
     _CHECK_NULL_RETURN(scenes_cluster, "Failed to create the scenes cluster", nullptr);
 
-    esp_matter::cluster_t *on_off_cluster =
-        esp_matter::cluster::on_off::create(endpoint, &(config->on_off), esp_matter::cluster_flags::CLUSTER_FLAG_SERVER,
-                                            esp_matter::cluster::on_off::feature::lighting::get_id());
-    _CHECK_NULL_RETURN(on_off_cluster, "Failed to create the on/off cluster", nullptr);
+    esp_matter::cluster_t *fan_control_cluster = esp_matter::cluster::fan_control::create(
+        endpoint, &(config->fan_control), esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
+    _CHECK_NULL_RETURN(fan_control_cluster, "Failed to create the fan control cluster", nullptr);
 
     return endpoint;
 }
-} // namespace metahouse::endpoint::on_off_light
+} // namespace metahouse::endpoint::fan
