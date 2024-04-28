@@ -1,0 +1,2 @@
+CompileFlags:                     # Tweak the parse settings
+  Remove: [-mlongcalls, -fstrict-volatile-bitfields, -fno-tree-switch-conversion]                     # strip all other warning-related flags

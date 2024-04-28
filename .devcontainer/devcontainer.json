@@ -1,0 +1,35 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.183.0/containers/ubuntu
+{
+	"name": "ESP-IDF & MATTER",
+	"build": {
+		"dockerfile": "Dockerfile"
+	},
+	"remoteUser": "esp",
+	// Add the IDs of extensions you want installed when the container is created
+	"workspaceMount": "source=${localWorkspaceFolder},target=/CurrentProject,type=bind", //
+	"workspaceFolder": "/CurrentProject",
+	"customizations": {
+		"vscode": {
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "bash",
+				"idf.showOnboardingOnInit": false,
+				"idf.espIdfPath": "/opt/esp/idf",
+				"idf.customExtraPaths": "",
+				"idf.pythonBinPath": "/opt/esp/python_env/idf5.1_py3.10_env/bin/python",
+				"idf.toolsPath": "/opt/esp/",
+				"idf.port": "/dev/ttyUSB0"
+			},
+			"extensions": [
+				"espressif.esp-idf-extension",
+				"GitHub.copilot",
+				"Wokwi.wokwi-vscode",
+				"llvm-vs-code-extensions.vscode-clangd"
+			]
+		}
+	},
+	"runArgs": [
+		"--privileged",
+		"--device=/dev/ttyUSB0"
+	]
+}
