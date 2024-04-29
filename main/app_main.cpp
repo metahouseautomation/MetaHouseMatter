@@ -19,6 +19,7 @@
 #include "on_off_plugin.hpp"
 #include "endpoints/window_covering/window_covering.hpp"
 
+#include "accessories/fan_accessory/fan_accessory.hpp"
 #include "accessories/light_accessory/light_accessory.hpp"
 #include "accessories/plugin_accessory/plugin_accessory.hpp"
 #include "accessories/switch_accessory/switch_accessory.hpp"
@@ -49,10 +50,12 @@ extern "C" void app_main()
     //     metahouse::endpoint::on_off_light::create(root_node, &on_off_light_config, aggregator, lightAccessory);
     // _CHECK_NULL_(on_off_light, "Failed to create on/off light");
 
-    // /* Create a Matter fan endpoint */
-    // metahouse::endpoint::fan::config_t fan_config;
-    // esp_matter::endpoint_t *fan = metahouse::endpoint::fan::create(root_node, &fan_config, aggregator);
-    // _CHECK_NULL_(fan, "Failed to create fan");
+    /* Create a Matter fan endpoint */
+    FanAccessory *fanAccessory = new FanAccessory(GPIO_NUM_5, GPIO_NUM_2);
+    metahouse::endpoint::fan::config_t fan_config;
+    fan_config.fan_control.fan_mode_sequence = 5;
+    esp_matter::endpoint_t *fan = metahouse::endpoint::fan::create(root_node, &fan_config, aggregator, fanAccessory);
+    _CHECK_NULL_(fan, "Failed to create fan");
 
     // /* Create a Matter on/off plugin endpoint */
     // PluginAccessory *pluginAccessory = new PluginAccessory(GPIO_NUM_4, GPIO_NUM_16);
@@ -61,12 +64,12 @@ extern "C" void app_main()
     //     metahouse::endpoint::on_off_plugin::create(root_node, &on_off_plugin_config, aggregator, pluginAccessory);
     // _CHECK_NULL_(on_off_plugin, "Failed to create on/off plugin");
 
-    /* Create a Matter generic switch endpoint */
-    SwitchAccessory *switchAccessory = new SwitchAccessory(GPIO_NUM_5);
-    metahouse::endpoint::generic_switch::config_t generic_switch_config;
-    esp_matter::endpoint_t *generic_switch =
-        metahouse::endpoint::generic_switch::create(root_node, &generic_switch_config, aggregator, switchAccessory);
-    _CHECK_NULL_(generic_switch, "Failed to create generic switch");
+    // /* Create a Matter generic switch endpoint */
+    // SwitchAccessory *switchAccessory = new SwitchAccessory(GPIO_NUM_5);
+    // metahouse::endpoint::generic_switch::config_t generic_switch_config;
+    // esp_matter::endpoint_t *generic_switch =
+    //     metahouse::endpoint::generic_switch::create(root_node, &generic_switch_config, aggregator, switchAccessory);
+    // _CHECK_NULL_(generic_switch, "Failed to create generic switch");
 
     // /* Create a Matter door lock endpoint */
     // metahouse::endpoint::door_lock::config_t door_lock_config;
