@@ -6,6 +6,8 @@
 #include <esp_matter_core.h>
 #include <esp_matter_endpoint.h>
 
+#include "accessories/window_accessory/window_accessory.hpp"
+
 // Main namespace for the project
 namespace metahouse {
 // Namespace for application endpoints
@@ -33,13 +35,14 @@ typedef struct config {
  * @param node Node to create the window covering on
  * @param config Configuration for the window covering
  * @param aggregator Aggregator as parent for the window covering (optional)
+ * @param priv_data Private data for the window covering (optional)
  *
  * @return window covering
  * @note If the aggregator is provided, the window covering will be created as bridged device on the aggregator
  *
  */
-esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config,
-                               esp_matter::endpoint_t *aggregator = nullptr);
+esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_matter::endpoint_t *aggregator = nullptr,
+                               WindowAccessory *priv_data = nullptr);
 
 } // namespace window_covering
 } // namespace endpoint

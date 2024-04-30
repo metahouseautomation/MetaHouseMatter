@@ -81,8 +81,8 @@ void FanAccessory::callback(void *button_handle, void *usr_data)
         fanAccessory->setState(0);
     } else {
         fanModeNewValue = esp_matter_enum8(3);
-        val_nullable = esp_matter_nullable_uint8(1);
-        val = esp_matter_uint8(1);
+        val_nullable = esp_matter_nullable_uint8(100);
+        val = esp_matter_uint8(100);
         fanAccessory->setState(1);
     }
 

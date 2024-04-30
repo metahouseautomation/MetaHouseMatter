@@ -8,6 +8,7 @@ list (APPEND srcs
     "accessories/plugin_accessory/plugin_accessory.cpp"
     "accessories/switch_accessory/switch_accessory.cpp"
     "accessories/fan_accessory/fan_accessory.cpp"
+    "accessories/window_accessory/window_accessory.cpp"
 )
     
 list (APPEND srcs
@@ -30,6 +31,7 @@ list(APPEND include_dirs
     "accessories/plugin_accessory"
     "accessories/switch_accessory"
     "accessories/fan_accessory"
+    "accessories/window_accessory"
 )
 
 list(APPEND include_dirs
