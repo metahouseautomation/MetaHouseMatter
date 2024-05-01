@@ -4,6 +4,10 @@ set(srcs
 )
 
 list (APPEND srcs
+    "clusters/bridged_device_basic_information/bridged_device_basic_information.cpp"
+)
+
+list (APPEND srcs
     "accessories/light_accessory/light_accessory.cpp"
     "accessories/plugin_accessory/plugin_accessory.cpp"
     "accessories/switch_accessory/switch_accessory.cpp"
@@ -24,6 +28,10 @@ list (APPEND srcs
 )
 
 set(include_dirs "." "include")
+
+list(APPEND include_dirs
+    "clusters/bridged_device_basic_information"
+)
 
 list(APPEND include_dirs
     "accessories/base_accessory"
