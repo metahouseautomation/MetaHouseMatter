@@ -1,5 +1,6 @@
 // TODO: Check All Endpoints cluster groups and scenes requirements
 
+#include <cstring>
 #include <esp_err.h>
 #include <esp_log.h>
 #include <esp_matter_attribute_utils.h>
@@ -47,6 +48,8 @@ extern "C" void app_main()
     /* Create a Matter on/off light endpoint */
     LightAccessory *lightAccessory = new LightAccessory(GPIO_NUM_5, GPIO_NUM_2);
     metahouse::endpoint::on_off_light::config_t on_off_light_config;
+    strncpy(on_off_light_config.bridged_device_basic_information.node_label, "Ronny light",
+            metahouse::clusters::bridged_device_basic_information::MAX_NAME_LENGTH);
     esp_matter::endpoint_t *on_off_light =
         metahouse::endpoint::on_off_light::create(root_node, &on_off_light_config, aggregator, lightAccessory);
     _CHECK_NULL_(on_off_light, "Failed to create on/off light");

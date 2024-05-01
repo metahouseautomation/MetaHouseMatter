@@ -15,10 +15,8 @@ esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_m
         endpoint = metahouse::endpoint::bridge_node::create_bridged_endpoint(node, aggregator, priv_data);
         _CHECK_NULL_RETURN(endpoint, "Failed to create the bridged endpoint", nullptr);
 
-        metahouse::clusters::bridged_device_basic_information::config_t *bridged_device_basic_information_config =
-            new metahouse::clusters::bridged_device_basic_information::config_t();
-        metahouse::clusters::bridged_device_basic_information::create(endpoint, bridged_device_basic_information_config,
-                                                                      esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
+        metahouse::clusters::bridged_device_basic_information::create(
+            endpoint, &(config->bridged_device_basic_information), esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
 
     } else { // If the aggregator is null, create a standalone endpoint
         endpoint = esp_matter::endpoint::create(node, esp_matter::endpoint_flags::ENDPOINT_FLAG_NONE, priv_data);

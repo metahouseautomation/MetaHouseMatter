@@ -8,6 +8,7 @@
 #include <esp_matter_endpoint.h>
 
 #include "accessories/light_accessory/light_accessory.hpp"
+#include "clusters/bridged_device_basic_information/bridged_device_basic_information.hpp"
 
 // Main namespace for the project
 namespace metahouse {
@@ -20,7 +21,7 @@ const uint8_t DEVICE_TYPE_VERSION = ESP_MATTER_ON_OFF_LIGHT_DEVICE_TYPE_VERSION;
 
 // Configuration structure for the on/off light
 typedef struct config {
-    esp_matter::cluster::bridged_device_basic_information::config_t
+    metahouse::clusters::bridged_device_basic_information::config_t
         bridged_device_basic_information; // used only if the device is a bridged device
     esp_matter::cluster::descriptor::config_t descriptor;
     esp_matter::cluster::identify::config_t identify;
