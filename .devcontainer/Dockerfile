@@ -107,5 +107,6 @@ RUN git config --global --add safe.directory *
 
 RUN echo "source $IDF_PATH/export.sh > /dev/null 2>&1" >> ~/.bashrc
 RUN echo "source $ESP_MATTER_PATH/export.sh > /dev/null 2>&1" >> ~/.bashrc
+RUN echo "export LC_ALL=C" >> ~/.bashrc
 
 CMD ["/bin/bash", "-c"]
