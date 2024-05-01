@@ -1,5 +1,6 @@
 #include "endpoints/aggregator/aggregator.hpp"
 #include "checker.hpp"
+#include "esp_matter_cluster.h"
 
 namespace metahouse::endpoint::aggregator {
 esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config)

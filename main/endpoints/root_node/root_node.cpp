@@ -1,6 +1,5 @@
 #include "root_node.hpp"
 #include "checker.hpp"
-#include "cluster/basic_information/basic_information.hpp"
 
 namespace metahouse::endpoint::root_node {
 esp_matter::node_t *create(config_t *config)
@@ -23,14 +22,8 @@ esp_matter::node_t *create(config_t *config)
         endpoint, &(config->access_control), esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
     _CHECK_NULL_RETURN(access_control_cluster, "Failed to create the access control cluster", nullptr);
 
-    // esp_matter::cluster_t *basic_information_cluster = esp_matter::cluster::basic_information::create(
-    //     endpoint, &(config->basic_information), esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
-    // _CHECK_NULL_RETURN(basic_information_cluster, "Failed to create the basic information cluster", nullptr);
-    metahouse::cluster::basic_information::config_t basic_information_config(2, 1, "Vendor Name", 1, "Product Name", 1,
-                                                                             "Node Label", "Location", 1,
-                                                                             "Hardware Version", 1, "Software Version");
-    esp_matter::cluster_t *basic_information_cluster = metahouse::cluster::basic_information::create(
-        endpoint, &basic_information_config, esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
+    esp_matter::cluster_t *basic_information_cluster = esp_matter::cluster::basic_information::create(
+        endpoint, &(config->basic_information), esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
     _CHECK_NULL_RETURN(basic_information_cluster, "Failed to create the basic information cluster", nullptr);
 
     esp_matter::cluster_t *general_commissioning_cluster = esp_matter::cluster::general_commissioning::create(

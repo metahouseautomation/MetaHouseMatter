@@ -1,7 +1,6 @@
 #include "on_off_light.hpp"
 #include "checker.hpp"
 #include "accessories/light_accessory/light_accessory.hpp"
-#include "cluster/bridged_device_basic_information/bridged_device_basic_information.hpp"
 #include "endpoints/bridge_node/bridge_node.hpp"
 
 namespace metahouse::endpoint::on_off_light {
@@ -15,20 +14,16 @@ esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_m
         endpoint = metahouse::endpoint::bridge_node::create_bridged_endpoint(node, aggregator, priv_data);
         _CHECK_NULL_RETURN(endpoint, "Failed to create the bridged endpoint", nullptr);
 
-        //  esp_matter::cluster_t *bridged_device_basic_information_cluster =
-        //       esp_matter::cluster::bridged_device_basic_information::create(
-        //           endpoint, &(config->bridged_device_basic_information),
-        //           esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
-        //   _CHECK_NULL_RETURN(bridged_device_basic_information_cluster,
-        //                      "Failed to create the bridged device basic information cluster", nullptr);
-
-        metahouse::cluster::bridged_device_basic_information::config_t bridged_device_basic_information_config(
-            2, "Vendor Name", 1, "Product Name", "Node Label", 1, "Hardware Version", 1, "Software Version", true);
+        // create myname on heap
+        char *myname = new char[10];
+        strcpy(myname, "myname");
         esp_matter::cluster_t *bridged_device_basic_information_cluster =
-            metahouse::cluster::bridged_device_basic_information::create(
-                endpoint, &bridged_device_basic_information_config, esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
+            esp_matter::cluster::bridged_device_basic_information::create(
+                endpoint, &(config->bridged_device_basic_information), esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
         _CHECK_NULL_RETURN(bridged_device_basic_information_cluster,
                            "Failed to create the bridged device basic information cluster", nullptr);
+        esp_matter::cluster::bridged_device_basic_information::attribute::create_node_label(
+            bridged_device_basic_information_cluster, myname, strlen(myname));
 
     } else { // If the aggregator is null, create a standalone endpoint
         endpoint = esp_matter::endpoint::create(node, esp_matter::endpoint_flags::ENDPOINT_FLAG_NONE, priv_data);
