@@ -28,6 +28,11 @@
 
 extern "C" void app_main()
 {
+    gpio_num_t buttonPins[] = {gpio_num_t(34), gpio_num_t(35), gpio_num_t(32), gpio_num_t(33),
+                               gpio_num_t(25), gpio_num_t(26), gpio_num_t(27), gpio_num_t(14)};
+    gpio_num_t relayPins[] = {gpio_num_t(23), gpio_num_t(22), gpio_num_t(21), gpio_num_t(19),
+                              gpio_num_t(18), gpio_num_t(17), gpio_num_t(16), gpio_num_t(4)};
+
     /* Initialize the ESP NVS layer */
     nvs_flash_init();
 
@@ -45,14 +50,22 @@ extern "C" void app_main()
     esp_matter::endpoint_t *aggregator = metahouse::endpoint::aggregator::create(root_node, &aggregator_config);
     _CHECK_NULL_(aggregator, "Failed to create aggregator");
 
-    /* Create a Matter on/off light endpoint */
-    LightAccessory *lightAccessory = new LightAccessory(GPIO_NUM_5, GPIO_NUM_2);
-    metahouse::endpoint::on_off_light::config_t on_off_light_config;
-    strncpy(on_off_light_config.bridged_device_basic_information.node_label, "Ronny light",
-            metahouse::clusters::bridged_device_basic_information::MAX_NAME_LENGTH);
-    esp_matter::endpoint_t *on_off_light =
-        metahouse::endpoint::on_off_light::create(root_node, &on_off_light_config, aggregator, lightAccessory);
-    _CHECK_NULL_(on_off_light, "Failed to create on/off light");
+    for (int counterI = 0; counterI < 8; counterI++) {
+        /* Create a Matter on/off light endpoint */
+        LightAccessory *lightAccessory = new LightAccessory(buttonPins[counterI], relayPins[counterI]);
+        metahouse::endpoint::on_off_light::config_t *on_off_light_config =
+            new metahouse::endpoint::on_off_light::config_t;
+        char name[30] = "Bulb ";
+        char i_str[2] = {0};
+        i_str[0] = (char)(counterI + '0');
+        strcat(name, i_str);
+        strncpy(on_off_light_config->bridged_device_basic_information.node_label, name,
+                metahouse::clusters::bridged_device_basic_information::MAX_NAME_LENGTH);
+
+        esp_matter::endpoint_t *on_off_light =
+            metahouse::endpoint::on_off_light::create(root_node, on_off_light_config, aggregator, lightAccessory);
+        _CHECK_NULL_(on_off_light, "Failed to create on/off light");
+    }
 
     /* Create a Matter fan endpoint */
     // FanAccessory *fanAccessory = new FanAccessory(GPIO_NUM_5, GPIO_NUM_2);

@@ -1,3 +1,6 @@
+#ifndef BRIDGED_DEVICE_BASIC_INFORMATION_HPP
+#define BRIDGED_DEVICE_BASIC_INFORMATION_HPP
+
 #include <esp_matter.h>
 #include <esp_matter_core.h>
 
@@ -18,3 +21,5 @@ esp_matter::cluster_t *create(esp_matter::endpoint_t *endpoint, config_t *config
 } // namespace bridged_device_basic_information
 } // namespace clusters
 } // namespace metahouse
+
+#endif // BRIDGED_DEVICE_BASIC_INFORMATION_HPP
