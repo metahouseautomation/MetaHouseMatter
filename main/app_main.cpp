@@ -44,12 +44,12 @@ extern "C" void app_main()
     esp_matter::endpoint_t *aggregator = metahouse::endpoint::aggregator::create(root_node, &aggregator_config);
     _CHECK_NULL_(aggregator, "Failed to create aggregator");
 
-    // /* Create a Matter on/off light endpoint */
-    // LightAccessory *lightAccessory = new LightAccessory(GPIO_NUM_5, GPIO_NUM_2);
-    // metahouse::endpoint::on_off_light::config_t on_off_light_config;
-    // esp_matter::endpoint_t *on_off_light =
-    //     metahouse::endpoint::on_off_light::create(root_node, &on_off_light_config, aggregator, lightAccessory);
-    // _CHECK_NULL_(on_off_light, "Failed to create on/off light");
+    /* Create a Matter on/off light endpoint */
+    LightAccessory *lightAccessory = new LightAccessory(GPIO_NUM_5, GPIO_NUM_2);
+    metahouse::endpoint::on_off_light::config_t on_off_light_config;
+    esp_matter::endpoint_t *on_off_light =
+        metahouse::endpoint::on_off_light::create(root_node, &on_off_light_config, aggregator, lightAccessory);
+    _CHECK_NULL_(on_off_light, "Failed to create on/off light");
 
     /* Create a Matter fan endpoint */
     // FanAccessory *fanAccessory = new FanAccessory(GPIO_NUM_5, GPIO_NUM_2);
@@ -78,12 +78,13 @@ extern "C" void app_main()
     //     metahouse::endpoint::door_lock::create(root_node, &door_lock_config, aggregator);
     // _CHECK_NULL_(door_lock, "Failed to create door lock");
 
-    /* Create a Matter window covering endpoint */
-    WindowAccessory *windowAccessory = new WindowAccessory(GPIO_NUM_14, GPIO_NUM_27, GPIO_NUM_23, GPIO_NUM_22);
-    metahouse::endpoint::window_covering::config_t window_covering_config;
-    esp_matter::endpoint_t *window_covering =
-        metahouse::endpoint::window_covering::create(root_node, &window_covering_config, aggregator, windowAccessory);
-    _CHECK_NULL_(window_covering, "Failed to create window covering");
+    // /* Create a Matter window covering endpoint */
+    // WindowAccessory *windowAccessory = new WindowAccessory(GPIO_NUM_14, GPIO_NUM_27, GPIO_NUM_23, GPIO_NUM_22);
+    // metahouse::endpoint::window_covering::config_t window_covering_config;
+    // esp_matter::endpoint_t *window_covering =
+    //     metahouse::endpoint::window_covering::create(root_node, &window_covering_config, aggregator,
+    //     windowAccessory);
+    // _CHECK_NULL_(window_covering, "Failed to create window covering");
 
     /* Start the Matter stack */
     esp_err_t err = esp_matter::start(metahouse::callback_event::event);
