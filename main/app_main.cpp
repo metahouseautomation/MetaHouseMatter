@@ -20,6 +20,7 @@
 #include "on_off_plugin.hpp"
 #include "endpoints/window_covering/window_covering.hpp"
 
+#include "accessories/door_accessory/door_accessory.hpp"
 #include "accessories/fan_accessory/fan_accessory.hpp"
 #include "accessories/light_accessory/light_accessory.hpp"
 #include "accessories/plugin_accessory/plugin_accessory.hpp"
@@ -92,12 +93,12 @@ extern "C" void app_main()
     // _CHECK_NULL_(generic_switch, "Failed to create generic switch");
 
     /* Create a Matter door lock endpoint */
-    for (int i = 0; i < 3; i++) {
-        metahouse::endpoint::door_lock::config_t door_lock_config;
-        esp_matter::endpoint_t *door_lock =
-            metahouse::endpoint::door_lock::create(root_node, &door_lock_config, aggregator);
-        _CHECK_NULL_(door_lock, "Failed to create door lock");
-    }
+    DoorAccessory *doorAccessory = new DoorAccessory(buttonPins[1], relayPins[1]);
+    _CHECK_NULL_(doorAccessory, "Failed to create door accessory");
+    metahouse::endpoint::door_lock::config_t door_lock_config;
+    esp_matter::endpoint_t *door_lock =
+        metahouse::endpoint::door_lock::create(root_node, &door_lock_config, aggregator, doorAccessory);
+    _CHECK_NULL_(door_lock, "Failed to create door lock");
 
     // /* Create a Matter window covering endpoint */
     // WindowAccessory *windowAccessory = new WindowAccessory(GPIO_NUM_14, GPIO_NUM_27, GPIO_NUM_23, GPIO_NUM_22);

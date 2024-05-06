@@ -13,16 +13,14 @@ class DoorAccessory : public BaseAccessory {
 private:
     constexpr static const uint32_t _CLUSTER_ID = chip::app::Clusters::DoorLock::Id;
     constexpr static const uint32_t _ATTRIBUTE_LOCK_STATE_ID = chip::app::Clusters::DoorLock::Attributes::LockState::Id;
-    constexpr static const uint32_t _ATTRIBUTE_LOCK_TYPE_ID = chip::app::Clusters::DoorLock::Attributes::LockType::Id;
-    constexpr static const uint32_t _ATTRIBUTE_ACTUATOR_ENABLED_ID =
-        chip::app::Clusters::DoorLock::Attributes::ActuatorEnabled::Id;
 
     uint16_t m_endpoint_id;
     gpio_num_t m_button_pin;
     gpio_num_t m_door_pin;
+    uint8_t m_opening_time_sec;
 
 public:
-    DoorAccessory(gpio_num_t button_pin, gpio_num_t door_pin);
+    DoorAccessory(gpio_num_t button_pin, gpio_num_t door_pin, uint8_t opening_time_sec = 5);
     ~DoorAccessory();
     esp_err_t setState(bool value);
     bool getState() const;
@@ -32,6 +30,8 @@ public:
     esp_err_t identification(uint16_t endpoint_id) override;
 
     static void callback(void *button_handle, void *usr_data);
+
+    static void delay_close_door(void *usr_data);
 };
 
 #endif // DOOR_ACCESSORY_HPP

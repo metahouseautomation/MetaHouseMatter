@@ -1,20 +1,24 @@
 /** IMPORTANT: change source file in connectedhomeip
  * connectedhomeip\connectedhomeip\src\app\clusters\door-lock-server\door-lock-server-callback.cpp
  *
-bool emberAfPluginDoorLockOnDoorLockCommand(chip::EndpointId endpointId, const Optional<chip::ByteSpan> & pinCode,
-                                            DlOperationError & err) {
-
-DoorLockServer::Instance().SetLockState(endpointId, DlLockState::kLocked);
-
-return true;
+bool __attribute__((weak)) emberAfPluginDoorLockOnDoorLockCommand(chip::EndpointId endpointId,
+                                                                  const Nullable<chip::FabricIndex> & fabricIdx,
+                                                                  const Nullable<chip::NodeId> & nodeId,
+                                                                  const Optional<ByteSpan> & pinCode, OperationErrorEnum
+& err)
+{
+    DoorLockServer::Instance().SetLockState(endpointId, DlLockState::kLocked);
+    return true;
 }
 
-bool emberAfPluginDoorLockOnDoorUnlockCommand(chip::EndpointId endpointId, const Optional<chip::ByteSpan> & pinCode,
-                                              DlOperationError & err) {
-
-DoorLockServer::Instance().SetLockState(endpointId, DlLockState::kUnlocked);
-
-return true;
+bool __attribute__((weak)) emberAfPluginDoorLockOnDoorUnlockCommand(chip::EndpointId endpointId,
+                                                                    const Nullable<chip::FabricIndex> & fabricIdx,
+                                                                    const Nullable<chip::NodeId> & nodeId,
+                                                                    const Optional<ByteSpan> & pinCode,
+OperationErrorEnum & err)
+{
+    DoorLockServer::Instance().SetLockState(endpointId, DlLockState::kUnlocked);
+    return true;
 }
  *
  **/
@@ -27,6 +31,8 @@ return true;
 #include <esp_matter_command.h>
 #include <esp_matter_core.h>
 #include <esp_matter_endpoint.h>
+
+#include "accessories/door_accessory/door_accessory.hpp"
 
 // Main namespace for the project
 namespace metahouse {
@@ -57,8 +63,8 @@ typedef struct config {
  * @note If the aggregator is provided, the door lock will be created as bridged device on the aggregator
  *
  */
-esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config,
-                               esp_matter::endpoint_t *aggregator = nullptr);
+esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_matter::endpoint_t *aggregator = nullptr,
+                               DoorAccessory *priv_data = nullptr);
 
 } // namespace door_lock
 } // namespace endpoint
