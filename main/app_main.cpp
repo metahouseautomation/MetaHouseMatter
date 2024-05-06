@@ -25,6 +25,9 @@
 #include "accessories/plugin_accessory/plugin_accessory.hpp"
 #include "accessories/switch_accessory/switch_accessory.hpp"
 #include "accessories/window_accessory/window_accessory.hpp"
+#include "endpoints/door_lock/door_lock.hpp"
+
+#include "accesspoint/webserver/webserver.hpp"
 
 extern "C" void app_main()
 {
@@ -50,22 +53,22 @@ extern "C" void app_main()
     esp_matter::endpoint_t *aggregator = metahouse::endpoint::aggregator::create(root_node, &aggregator_config);
     _CHECK_NULL_(aggregator, "Failed to create aggregator");
 
-    for (int counterI = 0; counterI < 8; counterI++) {
-        /* Create a Matter on/off light endpoint */
-        LightAccessory *lightAccessory = new LightAccessory(buttonPins[counterI], relayPins[counterI]);
-        metahouse::endpoint::on_off_light::config_t *on_off_light_config =
-            new metahouse::endpoint::on_off_light::config_t;
-        char name[30] = "Bulb ";
-        char i_str[2] = {0};
-        i_str[0] = (char)(counterI + '0');
-        strcat(name, i_str);
-        strncpy(on_off_light_config->bridged_device_basic_information.node_label, name,
-                metahouse::clusters::bridged_device_basic_information::MAX_NAME_LENGTH);
+    // for (int counterI = 0; counterI < 8; counterI++) {
+    //     /* Create a Matter on/off light endpoint */
+    //     LightAccessory *lightAccessory = new LightAccessory(buttonPins[counterI], relayPins[counterI]);
+    //     metahouse::endpoint::on_off_light::config_t *on_off_light_config =
+    //         new metahouse::endpoint::on_off_light::config_t;
+    //     char name[30] = "Bulb ";
+    //     char i_str[2] = {0};
+    //     i_str[0] = (char)(counterI + '0');
+    //     strcat(name, i_str);
+    //     strncpy(on_off_light_config->bridged_device_basic_information.node_label, name,
+    //             metahouse::clusters::bridged_device_basic_information::MAX_NAME_LENGTH);
 
-        esp_matter::endpoint_t *on_off_light =
-            metahouse::endpoint::on_off_light::create(root_node, on_off_light_config, aggregator, lightAccessory);
-        _CHECK_NULL_(on_off_light, "Failed to create on/off light");
-    }
+    //     esp_matter::endpoint_t *on_off_light =
+    //         metahouse::endpoint::on_off_light::create(root_node, on_off_light_config, aggregator, lightAccessory);
+    //     _CHECK_NULL_(on_off_light, "Failed to create on/off light");
+    // }
 
     /* Create a Matter fan endpoint */
     // FanAccessory *fanAccessory = new FanAccessory(GPIO_NUM_5, GPIO_NUM_2);
@@ -88,11 +91,13 @@ extern "C" void app_main()
     //     metahouse::endpoint::generic_switch::create(root_node, &generic_switch_config, aggregator, switchAccessory);
     // _CHECK_NULL_(generic_switch, "Failed to create generic switch");
 
-    // /* Create a Matter door lock endpoint */
-    // metahouse::endpoint::door_lock::config_t door_lock_config;
-    // esp_matter::endpoint_t *door_lock =
-    //     metahouse::endpoint::door_lock::create(root_node, &door_lock_config, aggregator);
-    // _CHECK_NULL_(door_lock, "Failed to create door lock");
+    /* Create a Matter door lock endpoint */
+    for (int i = 0; i < 3; i++) {
+        metahouse::endpoint::door_lock::config_t door_lock_config;
+        esp_matter::endpoint_t *door_lock =
+            metahouse::endpoint::door_lock::create(root_node, &door_lock_config, aggregator);
+        _CHECK_NULL_(door_lock, "Failed to create door lock");
+    }
 
     // /* Create a Matter window covering endpoint */
     // WindowAccessory *windowAccessory = new WindowAccessory(GPIO_NUM_14, GPIO_NUM_27, GPIO_NUM_23, GPIO_NUM_22);
@@ -105,4 +110,10 @@ extern "C" void app_main()
     /* Start the Matter stack */
     esp_err_t err = esp_matter::start(metahouse::callback_event::event);
     _CHECK_ERROR_(err, "Matter start failed");
+
+    ESP_LOGE("app_main", "Matter started successfully");
+
+    // /* Start the web server */
+    // metahouse::accesspoint::webserver::start_webserver();
+    // ESP_LOGE("app_main", "Webserver started successfully");
 }

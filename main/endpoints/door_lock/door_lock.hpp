@@ -1,19 +1,21 @@
 /** IMPORTANT: change source file in connectedhomeip
  * connectedhomeip\connectedhomeip\src\app\clusters\door-lock-server\door-lock-server-callback.cpp
  *
- * emberAfPluginDoorLockOnDoorLockCommand(chip::EndpointId endpointId, const Optional<ByteSpan> & pinCode,
- *OperationErrorEnum & err)
- * {
- * DoorLockServer::Instance().SetLockState(endpointId, chip::app::Clusters::DoorLock::DlLockState::kLocked);
- * return true;
- * }
- *
- * emberAfPluginDoorLockOnDoorUnlockCommand(chip::EndpointId endpointId, const Optional<ByteSpan> & pinCode,
- *OperationErrorEnum & err)
- * {
- * DoorLockServer::Instance().SetLockState(endpointId, chip::app::Clusters::DoorLock::DlLockState::kUnlocked);
- * return true;
- * }
+bool emberAfPluginDoorLockOnDoorLockCommand(chip::EndpointId endpointId, const Optional<chip::ByteSpan> & pinCode,
+                                            DlOperationError & err) {
+
+DoorLockServer::Instance().SetLockState(endpointId, DlLockState::kLocked);
+
+return true;
+}
+
+bool emberAfPluginDoorLockOnDoorUnlockCommand(chip::EndpointId endpointId, const Optional<chip::ByteSpan> & pinCode,
+                                              DlOperationError & err) {
+
+DoorLockServer::Instance().SetLockState(endpointId, DlLockState::kUnlocked);
+
+return true;
+}
  *
  **/
 

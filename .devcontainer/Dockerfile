@@ -87,23 +87,26 @@ RUN : \
   && :
 
 # Add main user
-ENV CONTAINER_USER=esp
-ENV USER_UID=1000
-ENV USER_GID=$USER_UID
-RUN groupadd --gid $USER_GID $CONTAINER_USER \
-    && adduser --uid $USER_UID --gid $USER_GID --disabled-password --gecos "" ${CONTAINER_USER} \
-    && usermod -a -G dialout $CONTAINER_USER \
-    && apt-get update \
-    && apt-get install -y sudo \
-    && echo $CONTAINER_USER ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$CONTAINER_USER \
-    && chmod 0440 /etc/sudoers.d/$CONTAINER_USER
+ENV CONTAINER_USER=root
+ARG CONTAINER_USER=$CONTAINER_USER
+# ENV USER_UID=1000
+# ENV USER_GID=$USER_UID
+# RUN groupadd --gid $USER_GID $CONTAINER_USER \
+#     && adduser --uid $USER_UID --gid $USER_GID --disabled-password --gecos "" ${CONTAINER_USER} \
+#     && usermod -a -G dialout $CONTAINER_USER \
+#     && apt-get update \
+#     && apt-get install -y sudo \
+#     && echo $CONTAINER_USER ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$CONTAINER_USER \
+#     && chmod 0440 /etc/sudoers.d/$CONTAINER_USER
+
+# RUN adduser ${CONTAINER_USER} sudo
 
 USER ${CONTAINER_USER}
 ENV USER=${CONTAINER_USER}
 WORKDIR /home/${CONTAINER_USER}
 
-# don't care about safe directory in a encapsulateds docker env
-RUN git config --global --add safe.directory *
+# # don't care about safe directory in a encapsulateds docker env
+# RUN git config --global --add safe.directory *
 
 RUN echo "source $IDF_PATH/export.sh > /dev/null 2>&1" >> ~/.bashrc
 RUN echo "source $ESP_MATTER_PATH/export.sh > /dev/null 2>&1" >> ~/.bashrc

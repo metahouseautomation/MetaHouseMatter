@@ -1,6 +1,16 @@
+
 set(srcs
     "app_main.cpp"
     "callback_event.cpp"
+)
+
+list (APPEND srcs
+    "accesspoint/url_handlers/accessories_handler.cpp"
+    "accesspoint/url_handlers/command_handler.cpp"
+    "accesspoint/url_handlers/file_read_handler.cpp"
+    "accesspoint/url_handlers/not_found_handler.cpp"
+    "accesspoint/url_handlers/wifi_handler.cpp"
+    "accesspoint/webserver/webserver.cpp"
 )
 
 list (APPEND srcs
@@ -28,6 +38,11 @@ list (APPEND srcs
 )
 
 set(include_dirs "." "include")
+
+list(APPEND include_dirs
+    "accesspoint/webserver"
+    "accesspoint/url_handlers"
+)
 
 list(APPEND include_dirs
     "clusters/bridged_device_basic_information"

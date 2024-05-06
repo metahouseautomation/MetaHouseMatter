@@ -5,7 +5,7 @@
 	"build": {
 		"dockerfile": "Dockerfile"
 	},
-	"remoteUser": "esp",
+	"remoteUser": "${localEnv:CONTAINER_USER}",
 	// Add the IDs of extensions you want installed when the container is created
 	"workspaceMount": "source=${localWorkspaceFolder},target=/CurrentProject,type=bind", //
 	"workspaceFolder": "/CurrentProject",
