@@ -1,6 +1,7 @@
 #include "endpoints/door_lock/door_lock.hpp"
 #include "checker.hpp"
 #include "esp_log.h"
+#include "esp_matter_attribute.h"
 #include "app-common/zap-generated/ids/Attributes.h"
 #include "endpoints/bridge_node/bridge_node.hpp"
 
@@ -44,6 +45,8 @@ esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_m
     esp_matter::cluster_t *door_lock_cluster = esp_matter::cluster::door_lock::create(
         endpoint, &(config->door_lock), esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
     _CHECK_NULL_RETURN(door_lock_cluster, "Failed to create the door lock cluster", nullptr);
+
+    esp_matter::cluster::door_lock::attribute::create_auto_relock_time(door_lock_cluster, 5000);
 
     esp_matter::attribute_t *attribute =
         esp_matter::attribute::get(door_lock_cluster, chip::app::Clusters::DoorLock::Attributes::LockState::Id);

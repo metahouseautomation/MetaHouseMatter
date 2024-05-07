@@ -12,18 +12,22 @@
 class DoorAccessory : public BaseAccessory {
 private:
     constexpr static const uint32_t _CLUSTER_ID = chip::app::Clusters::DoorLock::Id;
-    constexpr static const uint32_t _ATTRIBUTE_LOCK_STATE_ID = chip::app::Clusters::DoorLock::Attributes::LockState::Id;
+    constexpr static const uint32_t _ATTRIBUTE_LOCK_STATE_ID =
+        chip::app::Clusters::DoorLock::Attributes::LockState::Id; // LockState::Id;
 
     uint16_t m_endpoint_id;
     gpio_num_t m_button_pin;
     gpio_num_t m_door_pin;
     uint8_t m_opening_time_sec;
 
+    static const uint8_t _LOCK_STATE_LOCKED = 1;
+    static const uint8_t _LOCK_STATE_UNLOCKED = 2;
+
 public:
     DoorAccessory(gpio_num_t button_pin, gpio_num_t door_pin, uint8_t opening_time_sec = 5);
     ~DoorAccessory();
-    esp_err_t setState(bool value);
-    bool getState() const;
+    esp_err_t setState(uint8_t value);
+    uint8_t getState() const;
     void setEndpointId(uint16_t endpoint_id);
     esp_err_t attribute_update(uint16_t endpoint_id, uint32_t cluster_id, uint32_t attribute_id,
                                esp_matter_attr_val_t *val) override;
