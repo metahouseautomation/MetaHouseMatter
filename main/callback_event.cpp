@@ -132,6 +132,7 @@ esp_err_t metahouse::callback_event::attribute_update(esp_matter::attribute::cal
 
 void metahouse::callback_event::enable_factory_reset(gpio_num_t reset_pin, uint16_t reset_hold_time_s)
 {
+    reset_hold_time_s = (reset_hold_time_s * 1000);
     gpio_set_direction(reset_pin, GPIO_MODE_INPUT);
     button_config_t config = {.type = BUTTON_TYPE_GPIO,
                               .long_press_time = reset_hold_time_s,
