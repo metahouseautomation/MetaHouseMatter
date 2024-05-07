@@ -4,6 +4,7 @@
 #include <iot_button.h>
 
 #include "checker.hpp"
+#include "esp_matter_client.h"
 #include "esp_matter_core.h"
 #include "accessories/base_accessory/base_accessory.hpp"
 #include "accessories/door_accessory/door_accessory.hpp"
@@ -27,6 +28,15 @@ DoorAccessory::DoorAccessory(gpio_num_t button_pin, gpio_num_t door_pin, uint8_t
                               }};
     button_handle_t handle = iot_button_create(&config);
     iot_button_register_cb(handle, BUTTON_PRESS_DOWN, callback, this);
+
+    esp_timer_create_args_t timer_args = {
+        .callback = delay_close_door,
+        .arg = (void *)this,
+        .dispatch_method = ESP_TIMER_TASK,
+        .name = "delay_close_door",
+    };
+
+    esp_timer_create(&timer_args, &(this->timer));
 }
 
 DoorAccessory::~DoorAccessory()
@@ -34,6 +44,9 @@ DoorAccessory::~DoorAccessory()
     gpio_set_level(m_door_pin, 0);
     gpio_set_direction(m_door_pin, GPIO_MODE_DISABLE);
     gpio_set_direction(m_button_pin, GPIO_MODE_DISABLE);
+    if (esp_timer_is_active(this->timer))
+        esp_timer_stop(this->timer);
+    esp_timer_delete(this->timer);
 }
 
 esp_err_t DoorAccessory::setState(uint8_t value)
@@ -44,15 +57,11 @@ esp_err_t DoorAccessory::setState(uint8_t value)
 
     gpio_set_level(m_door_pin, newState);
     if (newState) {
-        esp_timer_create_args_t timer_args = {
-            .callback = delay_close_door,
-            .arg = (void *)this,
-            .dispatch_method = ESP_TIMER_TASK,
-            .name = "delay_close_door",
-        };
-        esp_timer_handle_t timer;
-        esp_timer_create(&timer_args, &timer);
-        esp_timer_start_once(timer, m_opening_time_sec * 1000000);
+        if (esp_timer_is_active(this->timer)) {
+            esp_timer_restart(this->timer, m_opening_time_sec * 1000000);
+        } else {
+            esp_timer_start_once(this->timer, m_opening_time_sec * 1000000);
+        }
     }
     return ESP_OK;
 }
@@ -88,22 +97,9 @@ void DoorAccessory::callback(void *button_handle, void *usr_data)
 {
     DoorAccessory *self = static_cast<DoorAccessory *>(usr_data);
 
-    esp_matter::node_t *node = esp_matter::node::get();
-    esp_matter::endpoint_t *endpoint = esp_matter::endpoint::get(node, self->m_endpoint_id);
-    esp_matter::cluster_t *cluster = esp_matter::cluster::get(endpoint, _CLUSTER_ID);
-    esp_matter::attribute_t *attribute = esp_matter::attribute::get(cluster, _ATTRIBUTE_LOCK_STATE_ID);
-    esp_matter_attr_val_t val;
-    esp_matter::attribute::get_val(attribute, &val);
-    val.val.u8 = _LOCK_STATE_LOCKED;
+    self->setState(_LOCK_STATE_UNLOCKED);
 
-    if (self->getState() == _LOCK_STATE_LOCKED) {
-        val.val.u8 = _LOCK_STATE_UNLOCKED;
-    } else {
-        val.val.u8 = _LOCK_STATE_LOCKED;
-    }
-    self->setState(val.val.u8);
-
-    esp_matter::attribute::report(self->m_endpoint_id, _CLUSTER_ID, _ATTRIBUTE_LOCK_STATE_ID, &val);
+    self->reportAttribute();
 }
 
 void DoorAccessory::delay_close_door(void *usr_data)
@@ -113,17 +109,28 @@ void DoorAccessory::delay_close_door(void *usr_data)
     DoorAccessory *self = static_cast<DoorAccessory *>(usr_data);
     self->setState(_LOCK_STATE_LOCKED);
 
-    esp_matter::node_t *node = esp_matter::node::get();
-    esp_matter::endpoint_t *endpoint = esp_matter::endpoint::get(node, self->m_endpoint_id);
-    esp_matter::cluster_t *cluster = esp_matter::cluster::get(endpoint, _CLUSTER_ID);
-    esp_matter::attribute_t *attribute = esp_matter::attribute::get(cluster, _ATTRIBUTE_LOCK_STATE_ID);
-    esp_matter_attr_val_t val;
-    esp_matter::attribute::get_val(attribute, &val);
-    val.val.u8 = _LOCK_STATE_LOCKED;
-    esp_matter::attribute::report(self->m_endpoint_id, _CLUSTER_ID, _ATTRIBUTE_LOCK_STATE_ID, &val);
+    self->reportAttribute();
 }
 
 void DoorAccessory::setEndpointId(uint16_t endpoint_id)
 {
     m_endpoint_id = endpoint_id;
+}
+
+void DoorAccessory::reportAttribute()
+{
+    esp_matter::node_t *node = esp_matter::node::get();
+    esp_matter::endpoint_t *endpoint = esp_matter::endpoint::get(node, m_endpoint_id);
+    esp_matter::cluster_t *cluster = esp_matter::cluster::get(endpoint, _CLUSTER_ID);
+    esp_matter::attribute_t *lock_state_attribute = esp_matter::attribute::get(cluster, _ATTRIBUTE_LOCK_STATE_ID);
+    esp_matter_attr_val_t lock_stat_val;
+    esp_matter::attribute::get_val(lock_state_attribute, &lock_stat_val);
+
+    if (getState() == _LOCK_STATE_LOCKED) {
+        lock_stat_val.val.u8 = _LOCK_STATE_LOCKED;
+    } else {
+        lock_stat_val.val.u8 = _LOCK_STATE_UNLOCKED;
+    }
+
+    esp_matter::attribute::report(m_endpoint_id, _CLUSTER_ID, _ATTRIBUTE_LOCK_STATE_ID, &lock_stat_val);
 }

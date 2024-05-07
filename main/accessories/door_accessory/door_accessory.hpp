@@ -5,6 +5,7 @@
 #include <app-common/zap-generated/ids/Clusters.h>
 #include <cstdint>
 #include <esp_matter_attribute_utils.h>
+#include <esp_timer.h>
 #include <hal/gpio_types.h>
 
 #include "accessories/base_accessory/base_accessory.hpp"
@@ -22,6 +23,10 @@ private:
 
     static const uint8_t _LOCK_STATE_LOCKED = 1;
     static const uint8_t _LOCK_STATE_UNLOCKED = 2;
+
+    esp_timer_handle_t timer;
+
+    void reportAttribute();
 
 public:
     DoorAccessory(gpio_num_t button_pin, gpio_num_t door_pin, uint8_t opening_time_sec = 5);

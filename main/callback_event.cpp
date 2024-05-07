@@ -2,6 +2,9 @@
 #include "esp_err.h"
 #include "esp_log.h"
 #include "esp_matter_attribute_utils.h"
+#include "esp_matter_core.h"
+#include <driver/gpio.h>
+#include <iot_button.h>
 #include "accessories/base_accessory/base_accessory.hpp"
 
 static const char *TAG = "app_callback";
@@ -125,4 +128,23 @@ esp_err_t metahouse::callback_event::attribute_update(esp_matter::attribute::cal
         return ESP_OK;
     }
     return ESP_OK;
+}
+
+void metahouse::callback_event::enable_factory_reset(gpio_num_t reset_pin, uint16_t reset_hold_time_s)
+{
+    gpio_set_direction(reset_pin, GPIO_MODE_INPUT);
+    button_config_t config = {.type = BUTTON_TYPE_GPIO,
+                              .long_press_time = reset_hold_time_s,
+                              .gpio_button_config = {
+                                  .gpio_num = reset_pin,
+                                  .active_level = 1,
+                              }};
+    button_handle_t handle = iot_button_create(&config);
+    iot_button_register_cb(
+        handle, BUTTON_LONG_PRESS_START,
+        [](void *button_handle, void *usr_data) {
+            ESP_LOGI(TAG, "Factory reset triggered");
+            esp_matter::factory_reset();
+        },
+        nullptr);
 }

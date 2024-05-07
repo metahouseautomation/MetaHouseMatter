@@ -9,6 +9,7 @@
 #include <esp_matter.h>
 #include <esp_matter_attribute_utils.h>
 #include <esp_matter_identify.h>
+#include <hal/gpio_types.h>
 #include <platform/CHIPDeviceEvent.h>
 
 // Main namespace for the project
@@ -51,6 +52,15 @@ esp_err_t identification(esp_matter::identification::callback_type_t type, uint1
  */
 esp_err_t attribute_update(esp_matter::attribute::callback_type_t type, uint16_t endpoint_id, uint32_t cluster_id,
                            uint32_t attribute_id, esp_matter_attr_val_t *val, void *priv_data);
+
+/** enable_factory_reset
+ * @brief Enable factory reset callback event
+ *
+ * @param reset_pin Reset pin
+ * @param reset_hold_time_s Reset hold time in seconds
+ *
+ */
+void enable_factory_reset(gpio_num_t reset_pin, uint16_t reset_hold_time_s);
 } // namespace callback_event
 } // namespace metahouse
 

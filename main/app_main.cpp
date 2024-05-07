@@ -43,6 +43,7 @@ extern "C" void app_main()
     /* Initialize the Matter Callbacks */
     esp_matter::attribute::set_callback(metahouse::callback_event::attribute_update);
     esp_matter::identification::set_callback(metahouse::callback_event::identification);
+    metahouse::callback_event::enable_factory_reset(GPIO_NUM_5, 5);
 
     /* Create a Matter root node on endpoint 0 */
     metahouse::endpoint::root_node::config_t root_node_config;
