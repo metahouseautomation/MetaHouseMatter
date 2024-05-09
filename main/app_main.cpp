@@ -34,8 +34,10 @@ extern "C" void app_main()
 {
     gpio_num_t buttonPins[] = {gpio_num_t(34), gpio_num_t(35), gpio_num_t(32), gpio_num_t(33),
                                gpio_num_t(25), gpio_num_t(26), gpio_num_t(27), gpio_num_t(14)};
-    gpio_num_t relayPins[] = {gpio_num_t(23), gpio_num_t(22), gpio_num_t(21), gpio_num_t(19),
-                              gpio_num_t(18), gpio_num_t(17), gpio_num_t(16), gpio_num_t(4)};
+    // gpio_num_t relayPins[] = {gpio_num_t(23), gpio_num_t(22), gpio_num_t(21), gpio_num_t(19),
+    //                           gpio_num_t(18), gpio_num_t(17), gpio_num_t(16), gpio_num_t(4)};
+    gpio_num_t relayPins[] = {gpio_num_t(4),  gpio_num_t(16), gpio_num_t(17), gpio_num_t(18),
+                              gpio_num_t(19), gpio_num_t(21), gpio_num_t(22), gpio_num_t(23)};
 
     /* Initialize the ESP NVS layer */
     nvs_flash_init();
@@ -55,67 +57,44 @@ extern "C" void app_main()
     esp_matter::endpoint_t *aggregator = metahouse::endpoint::aggregator::create(root_node, &aggregator_config);
     _CHECK_NULL_(aggregator, "Failed to create aggregator");
 
-    // for (int counterI = 0; counterI < 8; counterI++) {
-    //     /* Create a Matter on/off light endpoint */
-    //     LightAccessory *lightAccessory = new LightAccessory(buttonPins[counterI], relayPins[counterI]);
-    //     metahouse::endpoint::on_off_light::config_t *on_off_light_config =
-    //         new metahouse::endpoint::on_off_light::config_t;
-    //     char name[30] = "Bulb ";
-    //     char i_str[2] = {0};
-    //     i_str[0] = (char)(counterI + '0');
-    //     strcat(name, i_str);
-    //     strncpy(on_off_light_config->bridged_device_basic_information.node_label, name,
-    //             metahouse::clusters::bridged_device_basic_information::MAX_NAME_LENGTH);
+    for (int counterI = 0; counterI < 5; counterI++) {
+        /* Create a Matter on/off light endpoint */
+        LightAccessory *lightAccessory = new LightAccessory(buttonPins[counterI], relayPins[counterI]);
+        metahouse::endpoint::on_off_light::config_t *on_off_light_config =
+            new metahouse::endpoint::on_off_light::config_t;
+        char name[30] = "Bulb ";
+        char i_str[2] = {0};
+        i_str[0] = (char)(counterI + '0');
+        strcat(name, i_str);
+        strncpy(on_off_light_config->bridged_device_basic_information.node_label, name,
+                metahouse::clusters::bridged_device_basic_information::MAX_NAME_LENGTH);
 
-    //     esp_matter::endpoint_t *on_off_light =
-    //         metahouse::endpoint::on_off_light::create(root_node, on_off_light_config, aggregator, lightAccessory);
-    //     _CHECK_NULL_(on_off_light, "Failed to create on/off light");
-    // }
+        esp_matter::endpoint_t *on_off_light =
+            metahouse::endpoint::on_off_light::create(root_node, on_off_light_config, aggregator, lightAccessory);
+        _CHECK_NULL_(on_off_light, "Failed to create on/off light");
+    }
 
     /* Create a Matter fan endpoint */
-    // FanAccessory *fanAccessory = new FanAccessory(GPIO_NUM_5, GPIO_NUM_2);
-    // metahouse::endpoint::fan::config_t fan_config;
-    // fan_config.fan_control.fan_mode_sequence = 5;
-    // esp_matter::endpoint_t *fan = metahouse::endpoint::fan::create(root_node, &fan_config, aggregator, fanAccessory);
-    // _CHECK_NULL_(fan, "Failed to create fan");
-
-    // /* Create a Matter on/off plugin endpoint */
-    // PluginAccessory *pluginAccessory = new PluginAccessory(GPIO_NUM_4, GPIO_NUM_16);
-    // metahouse::endpoint::on_off_plugin::config_t on_off_plugin_config;
-    // esp_matter::endpoint_t *on_off_plugin =
-    //     metahouse::endpoint::on_off_plugin::create(root_node, &on_off_plugin_config, aggregator, pluginAccessory);
-    // _CHECK_NULL_(on_off_plugin, "Failed to create on/off plugin");
-
-    // /* Create a Matter generic switch endpoint */
-    // SwitchAccessory *switchAccessory = new SwitchAccessory(GPIO_NUM_5);
-    // metahouse::endpoint::generic_switch::config_t generic_switch_config;
-    // esp_matter::endpoint_t *generic_switch =
-    //     metahouse::endpoint::generic_switch::create(root_node, &generic_switch_config, aggregator, switchAccessory);
-    // _CHECK_NULL_(generic_switch, "Failed to create generic switch");
+    for (int counterI = 5; counterI < 7; counterI++) {
+        FanAccessory *fanAccessory = new FanAccessory(buttonPins[counterI], relayPins[counterI]);
+        metahouse::endpoint::fan::config_t fan_config;
+        fan_config.fan_control.fan_mode_sequence = 5;
+        esp_matter::endpoint_t *fan =
+            metahouse::endpoint::fan::create(root_node, &fan_config, aggregator, fanAccessory);
+        _CHECK_NULL_(fan, "Failed to create fan");
+    }
 
     /* Create a Matter door lock endpoint */
-    DoorAccessory *doorAccessory = new DoorAccessory(buttonPins[1], relayPins[1]);
+    DoorAccessory *doorAccessory = new DoorAccessory(buttonPins[7], relayPins[7]);
     _CHECK_NULL_(doorAccessory, "Failed to create door accessory");
     metahouse::endpoint::door_lock::config_t door_lock_config;
     esp_matter::endpoint_t *door_lock =
         metahouse::endpoint::door_lock::create(root_node, &door_lock_config, aggregator, doorAccessory);
     _CHECK_NULL_(door_lock, "Failed to create door lock");
 
-    // /* Create a Matter window covering endpoint */
-    // WindowAccessory *windowAccessory = new WindowAccessory(GPIO_NUM_14, GPIO_NUM_27, GPIO_NUM_23, GPIO_NUM_22);
-    // metahouse::endpoint::window_covering::config_t window_covering_config;
-    // esp_matter::endpoint_t *window_covering =
-    //     metahouse::endpoint::window_covering::create(root_node, &window_covering_config, aggregator,
-    //     windowAccessory);
-    // _CHECK_NULL_(window_covering, "Failed to create window covering");
-
     /* Start the Matter stack */
     esp_err_t err = esp_matter::start(metahouse::callback_event::event);
     _CHECK_ERROR_(err, "Matter start failed");
 
-    ESP_LOGE("app_main", "Matter started successfully");
-
-    // /* Start the web server */
-    // metahouse::accesspoint::webserver::start_webserver();
-    // ESP_LOGE("app_main", "Webserver started successfully");
+    ESP_LOGI("app_main", "Matter started successfully");
 }

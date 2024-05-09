@@ -2,6 +2,7 @@
 #include "checker.hpp"
 #include "esp_log.h"
 #include "esp_matter_attribute.h"
+#include "esp_matter_core.h"
 #include "app-common/zap-generated/ids/Attributes.h"
 #include "endpoints/bridge_node/bridge_node.hpp"
 
@@ -48,7 +49,15 @@ esp_matter::endpoint_t *create(esp_matter::node_t *node, config_t *config, esp_m
 
     esp_matter::cluster::door_lock::attribute::create_auto_relock_time(door_lock_cluster, 5000);
 
-    priv_data->setState(priv_data->getState());
+    esp_matter::attribute_t *lock_state_attribute =
+        esp_matter::attribute::get(door_lock_cluster, chip::app::Clusters::DoorLock::Attributes::LockState::Id);
+
+    esp_matter_attr_val_t val;
+    esp_matter::attribute::get_val(lock_state_attribute, &val);
+
+    val.val.u8 = priv_data->getState();
+
+    esp_matter::attribute::set_val(lock_state_attribute, &val);
 
     return endpoint;
 }

@@ -62,6 +62,10 @@ esp_err_t DoorAccessory::setState(uint8_t value)
         } else {
             esp_timer_start_once(this->timer, m_opening_time_sec * 1000000);
         }
+    } else {
+        if (esp_timer_is_active(this->timer)) {
+            esp_timer_stop(this->timer);
+        }
     }
     return ESP_OK;
 }
