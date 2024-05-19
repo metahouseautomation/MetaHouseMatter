@@ -61,6 +61,15 @@ esp_err_t attribute_update(esp_matter::attribute::callback_type_t type, uint16_t
  *
  */
 void enable_factory_reset(gpio_num_t reset_pin, uint16_t reset_hold_time_s);
+
+/** enable_restart_device
+ * @brief Enable restart device callback event by pressing the restart pin (single press)
+ *
+ * @param restart_pin Restart pin
+ *
+ */
+void enable_restart_device(gpio_num_t restart_pin);
+
 } // namespace callback_event
 } // namespace metahouse
 

@@ -149,3 +149,21 @@ void metahouse::callback_event::enable_factory_reset(gpio_num_t reset_pin, uint1
         },
         nullptr);
 }
+
+void metahouse::callback_event::enable_restart_device(gpio_num_t restart_pin)
+{
+    gpio_set_direction(restart_pin, GPIO_MODE_INPUT);
+    button_config_t config = {.type = BUTTON_TYPE_GPIO,
+                              .gpio_button_config = {
+                                  .gpio_num = restart_pin,
+                                  .active_level = 1,
+                              }};
+    button_handle_t handle = iot_button_create(&config);
+    iot_button_register_cb(
+        handle, BUTTON_SINGLE_CLICK,
+        [](void *button_handle, void *usr_data) {
+            ESP_LOGI(TAG, "Restart device triggered");
+            esp_restart();
+        },
+        nullptr);
+}

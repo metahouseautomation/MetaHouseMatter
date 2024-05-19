@@ -17,6 +17,7 @@ SwitchAccessory::SwitchAccessory(gpio_num_t button_pin)
     gpio_set_direction(m_button_pin, GPIO_MODE_INPUT);
     button_config_t config = {.type = BUTTON_TYPE_GPIO,
                               .long_press_time = 2000,
+                              .short_press_time = 80,
                               .gpio_button_config = {
                                   .gpio_num = m_button_pin,
                                   .active_level = 1,
