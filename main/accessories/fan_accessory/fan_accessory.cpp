@@ -49,16 +49,21 @@ bool FanAccessory::getState() const
 esp_err_t FanAccessory::attribute_update(uint16_t endpoint_id, uint32_t cluster_id, uint32_t attribute_id,
                                          esp_matter_attr_val_t *val)
 {
-    if (val == nullptr || cluster_id != _CLUSTER_ID ||
-        (attribute_id != _ATTRIBUTE_PERCENT_SETTING_ID && attribute_id != _ATTRIBUTE_PERCENT_CURRENT_ID)) {
+    if (val == nullptr || cluster_id != _CLUSTER_ID || (attribute_id != _ATTRIBUTE_PERCENT_SETTING_ID)) {
         return ESP_OK;
     }
 
+    esp_matter_attr_val_t percent_current_val = esp_matter_uint8(val->val.i);
+    esp_matter_attr_val_t fan_mode_val;
     if (val->val.i > 0) {
         gpio_set_level(m_led_pin, 1);
+        fan_mode_val = esp_matter_enum8(3);
     } else {
         gpio_set_level(m_led_pin, 0);
+        fan_mode_val = esp_matter_enum8(0);
     }
+    esp_matter::attribute::report(m_endpoint_id, _CLUSTER_ID, _ATTRIBUTE_PERCENT_CURRENT_ID, &percent_current_val);
+    esp_matter::attribute::report(m_endpoint_id, _CLUSTER_ID, _ATTRIBUTE_FAN_MODE_ID, &fan_mode_val);
     return ESP_OK;
 }
 

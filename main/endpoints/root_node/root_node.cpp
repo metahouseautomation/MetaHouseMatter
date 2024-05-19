@@ -12,7 +12,7 @@ esp_matter::node_t *create(config_t *config)
     _CHECK_NULL_RETURN(endpoint, "Failed to create the endpoint", nullptr);
 
     esp_err_t err = esp_matter::endpoint::add_device_type(endpoint, DEVICE_TYPE_ID, DEVICE_TYPE_VERSION);
-    _CHECK_ERROR_RETURN(err, "Failed to add the device type", nullptr);
+    _CHECK_ERROR_RETURN(err, "Failed to add the device type root node", nullptr);
 
     esp_matter::cluster_t *descriptor_cluster = esp_matter::cluster::descriptor::create(
         endpoint, &(config->descriptor), esp_matter::cluster_flags::CLUSTER_FLAG_SERVER);
