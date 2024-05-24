@@ -1,0 +1,11 @@
+let AccessoryTypeArray = {
+    "LIGHT": ["name", "lightPin", "buttonPin"],
+    "FAN": ["name", "fanPin", "buttonPin"],
+    "OUTLET": ["name", "outletPin", "buttonPin"],
+    "SWITCH": ["name", "switchPin", "buttonPin"],
+    "BUTTON": ["name", "buttonPin"],
+    "BOILER": ["name", "boilerPin", "buttonPin"],
+    "DOOR": ["name", "doorPin", "doorButtonPin", "doorbellButtonPin", "openDuration"],
+    "WINDOW": ["name", "motorUpPin", "motorDownPin", "buttonUpPin", "buttonDownPin", "timeToOpen", "timeToClose"],
+    "BLIND": ["name", "motorUpPin", "motorDownPin", "buttonUpPin", "buttonDownPin", "timeToOpen", "timeToClose"]
+};

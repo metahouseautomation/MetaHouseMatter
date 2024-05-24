@@ -8,15 +8,15 @@
 #include "accessories/base_accessory/base_accessory.hpp"
 #include "accessories/fan_accessory/fan_accessory.hpp"
 
-FanAccessory::FanAccessory(gpio_num_t button_pin, gpio_num_t led_pin)
+FanAccessory::FanAccessory(gpio_num_t button_pin, gpio_num_t fan_pin)
     : BaseAccessory()
     , m_endpoint_id(0)
 {
     this->m_button_pin = button_pin;
-    this->m_led_pin = led_pin;
+    this->m_fan_pin = fan_pin;
 
-    gpio_set_direction(m_led_pin, GPIO_MODE_INPUT_OUTPUT);
-    gpio_set_level(m_led_pin, 0);
+    gpio_set_direction(m_fan_pin, GPIO_MODE_INPUT_OUTPUT);
+    gpio_set_level(m_fan_pin, 0);
 
     gpio_set_direction(m_button_pin, GPIO_MODE_INPUT);
     button_config_t config = {.type = BUTTON_TYPE_GPIO,
@@ -30,20 +30,20 @@ FanAccessory::FanAccessory(gpio_num_t button_pin, gpio_num_t led_pin)
 
 FanAccessory::~FanAccessory()
 {
-    gpio_set_level(m_led_pin, 0);
-    gpio_set_direction(m_led_pin, GPIO_MODE_DISABLE);
+    gpio_set_level(m_fan_pin, 0);
+    gpio_set_direction(m_fan_pin, GPIO_MODE_DISABLE);
     gpio_set_direction(m_button_pin, GPIO_MODE_DISABLE);
 }
 
 esp_err_t FanAccessory::setState(bool value)
 {
-    gpio_set_level(m_led_pin, value);
+    gpio_set_level(m_fan_pin, value);
     return ESP_OK;
 }
 
 bool FanAccessory::getState() const
 {
-    return gpio_get_level(m_led_pin);
+    return gpio_get_level(m_fan_pin);
 }
 
 esp_err_t FanAccessory::attribute_update(uint16_t endpoint_id, uint32_t cluster_id, uint32_t attribute_id,
@@ -56,10 +56,10 @@ esp_err_t FanAccessory::attribute_update(uint16_t endpoint_id, uint32_t cluster_
     esp_matter_attr_val_t percent_current_val = esp_matter_uint8(val->val.i);
     esp_matter_attr_val_t fan_mode_val;
     if (val->val.i > 0) {
-        gpio_set_level(m_led_pin, 1);
+        gpio_set_level(m_fan_pin, 1);
         fan_mode_val = esp_matter_enum8(3);
     } else {
-        gpio_set_level(m_led_pin, 0);
+        gpio_set_level(m_fan_pin, 0);
         fan_mode_val = esp_matter_enum8(0);
     }
     esp_matter::attribute::report(m_endpoint_id, _CLUSTER_ID, _ATTRIBUTE_PERCENT_CURRENT_ID, &percent_current_val);

@@ -16,10 +16,10 @@ private:
 
     uint16_t m_endpoint_id;
     gpio_num_t m_button_pin;
-    gpio_num_t m_led_pin;
+    gpio_num_t m_plugin_pin;
 
 public:
-    PluginAccessory(gpio_num_t button_pin, gpio_num_t led_pin);
+    PluginAccessory(gpio_num_t button_pin, gpio_num_t plugin_pin);
     ~PluginAccessory();
     esp_err_t setState(bool value);
     bool getState() const;

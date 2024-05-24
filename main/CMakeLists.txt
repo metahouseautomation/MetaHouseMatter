@@ -8,6 +8,7 @@ list (APPEND srcs
     "accesspoint/url_handlers/accessories_handler.cpp"
     "accesspoint/url_handlers/command_handler.cpp"
     "accesspoint/url_handlers/file_read_handler.cpp"
+    "accesspoint/url_handlers/helper_handler.cpp"
     "accesspoint/url_handlers/not_found_handler.cpp"
     "accesspoint/url_handlers/wifi_handler.cpp"
     "accesspoint/webserver/webserver.cpp"
@@ -24,6 +25,7 @@ list (APPEND srcs
     "accessories/fan_accessory/fan_accessory.cpp"
     "accessories/window_accessory/window_accessory.cpp"
     "accessories/door_accessory/door_accessory.cpp"
+    "accessories/manager_accessory/manager_accessory.cpp"
 )
     
 list (APPEND srcs
@@ -57,6 +59,7 @@ list(APPEND include_dirs
     "accessories/fan_accessory"
     "accessories/window_accessory"
     "accessories/door_accessory"
+    "accessories/manager_accessory"
 )
 
 list(APPEND include_dirs
@@ -73,6 +76,9 @@ list(APPEND include_dirs
 
 idf_component_register(SRCS "${srcs}"
                       PRIV_INCLUDE_DIRS  "${include_dirs}")
+
+set(DATA_SRC_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../data/frontend")
+spiffs_create_partition_image(frontend ${DATA_SRC_DIR} FLASH_IN_PROJECT)
 
 set_property(TARGET ${COMPONENT_LIB} PROPERTY CXX_STANDARD 17)
 target_compile_options(${COMPONENT_LIB} PRIVATE "-DCHIP_HAVE_CONFIG_H")

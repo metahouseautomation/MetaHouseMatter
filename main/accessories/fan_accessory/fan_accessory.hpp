@@ -20,10 +20,10 @@ private:
 
     uint16_t m_endpoint_id;
     gpio_num_t m_button_pin;
-    gpio_num_t m_led_pin;
+    gpio_num_t m_fan_pin;
 
 public:
-    FanAccessory(gpio_num_t button_pin, gpio_num_t led_pin);
+    FanAccessory(gpio_num_t button_pin, gpio_num_t fan_pin);
     ~FanAccessory();
     esp_err_t setState(bool value);
     bool getState() const;

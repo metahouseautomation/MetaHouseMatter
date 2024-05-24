@@ -12,11 +12,16 @@
 #include "callback_event.hpp"
 #include "checker.hpp"
 
+#include "esp_netif.h"
 #include "root_node.hpp"
 #include "endpoints/aggregator/aggregator.hpp"
 
 #include "accessories/plugin_accessory/plugin_accessory.hpp"
 #include "endpoints/on_off_plugin/on_off_plugin.hpp"
+
+#include "accesspoint/webserver/webserver.hpp"
+
+#include "accessories/manager_accessory/manager_accessory.hpp"
 
 extern "C" void app_main()
 {
@@ -57,4 +62,12 @@ extern "C" void app_main()
     _CHECK_ERROR_(err, "Matter start failed");
 
     ESP_LOGI("app_main", "Matter started successfully");
+
+    /* Start the webserver */
+    httpd_handle_t server = metahouse::accesspoint::webserver::start_webserver();
+    _CHECK_NULL_(server, "Failed to start webserver");
+
+    /* Create stored accessories */
+    err = create_stored_accessories();
+    _CHECK_ERROR_(err, "Failed to create stored accessories");
 }

@@ -6,15 +6,15 @@
 #include "accessories/base_accessory/base_accessory.hpp"
 #include "accessories/plugin_accessory/plugin_accessory.hpp"
 
-PluginAccessory::PluginAccessory(gpio_num_t button_pin, gpio_num_t led_pin)
+PluginAccessory::PluginAccessory(gpio_num_t button_pin, gpio_num_t plugin_pin)
     : BaseAccessory()
     , m_endpoint_id(0)
 {
     this->m_button_pin = button_pin;
-    this->m_led_pin = led_pin;
+    this->m_plugin_pin = plugin_pin;
 
-    gpio_set_direction(m_led_pin, GPIO_MODE_INPUT_OUTPUT);
-    gpio_set_level(m_led_pin, 0);
+    gpio_set_direction(m_plugin_pin, GPIO_MODE_INPUT_OUTPUT);
+    gpio_set_level(m_plugin_pin, 0);
 
     gpio_set_direction(m_button_pin, GPIO_MODE_INPUT);
     button_config_t config = {.type = BUTTON_TYPE_GPIO,
@@ -28,20 +28,20 @@ PluginAccessory::PluginAccessory(gpio_num_t button_pin, gpio_num_t led_pin)
 
 PluginAccessory::~PluginAccessory()
 {
-    gpio_set_level(m_led_pin, 0);
-    gpio_set_direction(m_led_pin, GPIO_MODE_DISABLE);
+    gpio_set_level(m_plugin_pin, 0);
+    gpio_set_direction(m_plugin_pin, GPIO_MODE_DISABLE);
     gpio_set_direction(m_button_pin, GPIO_MODE_DISABLE);
 }
 
 esp_err_t PluginAccessory::setState(bool value)
 {
-    gpio_set_level(m_led_pin, value);
+    gpio_set_level(m_plugin_pin, value);
     return ESP_OK;
 }
 
 bool PluginAccessory::getState() const
 {
-    return gpio_get_level(m_led_pin);
+    return gpio_get_level(m_plugin_pin);
 }
 
 esp_err_t PluginAccessory::attribute_update(uint16_t endpoint_id, uint32_t cluster_id, uint32_t attribute_id,
@@ -114,11 +114,11 @@ void PluginAccessory::callback(void *button_handle, void *usr_data)
         sceneValid_val.val.b = 0;
     }
 
-    esp_matter::attribute::set_val(attribute, &onOff_val);
-    esp_matter::attribute::set_val(attribute_globalSceneControl, &globalSceneControl_val);
-    esp_matter::attribute::set_val(attribute_onTime, &onTime_val);
-    esp_matter::attribute::set_val(attribute_offWaitTime, &offWaitTime_val);
-    esp_matter::attribute::set_val(attribute_sceneValid, &sceneValid_val);
+    // esp_matter::attribute::set_val(attribute, &onOff_val);
+    // esp_matter::attribute::set_val(attribute_globalSceneControl, &globalSceneControl_val);
+    // esp_matter::attribute::set_val(attribute_onTime, &onTime_val);
+    // esp_matter::attribute::set_val(attribute_offWaitTime, &offWaitTime_val);
+    // esp_matter::attribute::set_val(attribute_sceneValid, &sceneValid_val);
 
     esp_matter::attribute::report(self->m_endpoint_id, _CLUSTER_ID, _ATTRIBUTE_ID, &onOff_val);
     esp_matter::attribute::report(self->m_endpoint_id, _CLUSTER_ID, 0x4000, &globalSceneControl_val);
